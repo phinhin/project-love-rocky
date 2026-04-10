@@ -1,3 +1,5 @@
+import { DEMO_JOBS } from '@/lib/demo-jobs';
+
 export type JobPosting = {
   id: string;
   company: string;
@@ -81,14 +83,27 @@ async function fetchLeverJobs(source: Extract<JobSource, { type: 'lever' }>): Pr
 }
 
 export async function getJobPostings(limit = 24): Promise<JobPosting[]> {
-  const sources = getConfiguredJobSources();
-  const results = await Promise.all(
-    sources.map(async (source) => source.type === 'greenhouse' ? fetchGreenhouseJobs(source) : fetchLeverJobs(source))
-  );
+  try {
+    const sources = getConfiguredJobSources();
+    const results = await Promise.all(
+      sources.map(async (source) => {
+        try {
+          return source.type === 'greenhouse' ? fetchGreenhouseJobs(source) : fetchLeverJobs(source);
+        } catch {
+          return [] as JobPosting[];
+        }
+      })
+    );
 
-  return results
-    .flat()
-    .filter((job, index, jobs) => jobs.findIndex((candidate) => candidate.url === job.url) === index)
-    .sort((a, b) => +new Date(b.updatedAt) - +new Date(a.updatedAt))
-    .slice(0, limit);
+    const jobs = results
+      .flat()
+      .filter((job, index, jobs) => jobs.findIndex((candidate) => candidate.url === job.url) === index)
+      .sort((a, b) => +new Date(b.updatedAt) - +new Date(a.updatedAt))
+      .slice(0, limit);
+
+    if (jobs.length > 0) return jobs;
+    return DEMO_JOBS.slice(0, limit);
+  } catch {
+    return DEMO_JOBS.slice(0, limit);
+  }
 }
