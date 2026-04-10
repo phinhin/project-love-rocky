@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #0b0f1a;
+  color: #f6f2d7;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(#7cf7ff 1px, transparent 1px);
+  background-size: 18px 18px;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: -2;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+    radial-gradient(circle at top, rgba(124, 247, 255, 0.08), transparent 25%),
+    radial-gradient(circle at 80% 20%, rgba(255, 82, 214, 0.08), transparent 20%),
+    linear-gradient(to bottom, rgba(10, 14, 22, 0.4), rgba(10, 14, 22, 0.94));
+  background-size: 100% 4px, auto, auto, auto;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.pixel-text {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.pixel-title {
+  text-shadow: 3px 3px 0 #24314f;
+}
+
+.radar-sweep {
+  background: conic-gradient(from 0deg, rgba(124,247,255,0), rgba(124,247,255,0.28), rgba(124,247,255,0) 36%);
+  animation: spin 8s linear infinite;
+}
+
+.blink-slow {
+  animation: blink 1.4s steps(2, start) infinite;
+}
+
+.flicker {
+  animation: flicker 3s infinite;
+}
+
+@keyframes spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes blink {
+  50% { opacity: 0.2; }
+}
+
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 80%, 100% { opacity: 1; }
+  20%, 22%, 79% { opacity: 0.82; }
+}
